@@ -1,49 +1,76 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Search, Menu, X, ChevronDown, User, BookOpen, Briefcase, Palette, Code, Heart, Monitor, Camera, TrendingUp, MessageCircle, Users, ExternalLink, Sparkles, Zap, Star } from "lucide-react";
 
-// Static categories data - TODO: Replace with API call
+// API endpoints - replace with your actual API URLs
+const API_BASE_URL = 'https://your-api-domain.com/api'; // Replace with your actual API base URL
+const CATEGORIES_API = `${API_BASE_URL}/categories`;
+
+// Static categories data as fallback
 const staticCategories = [
-  { id: 1, icon: <Briefcase className="w-5 h-5" />, label: "Business", color: "from-blue-500 to-blue-600", count: "2,345 courses" },
-  { id: 2, icon: <Palette className="w-5 h-5" />, label: "Design", color: "from-pink-500 to-rose-600", count: "1,789 courses" },
-  { id: 3, icon: <Code className="w-5 h-5" />, label: "Development", color: "from-green-500 to-emerald-600", count: "3,567 courses" },
-  { id: 4, icon: <Heart className="w-5 h-5" />, label: "Health & Fitness", color: "from-red-500 to-pink-600", count: "987 courses" },
-  { id: 5, icon: <BookOpen className="w-5 h-5" />, label: "Music", color: "from-purple-500 to-violet-600", count: "1,234 courses" },
-  { id: 6, icon: <TrendingUp className="w-5 h-5" />, label: "Sales", color: "from-yellow-500 to-orange-600", count: "654 courses" },
-  { id: 7, icon: <Monitor className="w-5 h-5" />, label: "Technology", color: "from-indigo-500 to-purple-600", count: "2,123 courses" },
-  { id: 8, icon: <Camera className="w-5 h-5" />, label: "Photography", color: "from-orange-500 to-red-600", count: "876 courses" },
+  { id: 1, name: "Business", slug: "business", icon: <Briefcase className="w-5 h-5" />, color: "from-blue-500 to-blue-600", count: "2,345 courses" },
+  { id: 2, name: "Design", slug: "design", icon: <Palette className="w-5 h-5" />, color: "from-pink-500 to-rose-600", count: "1,789 courses" },
+  { id: 3, name: "Development", slug: "development", icon: <Code className="w-5 h-5" />, color: "from-green-500 to-emerald-600", count: "3,567 courses" },
+  { id: 4, name: "Health & Fitness", slug: "health-fitness", icon: <Heart className="w-5 h-5" />, color: "from-red-500 to-pink-600", count: "987 courses" },
+  { id: 5, name: "Music", slug: "music", icon: <BookOpen className="w-5 h-5" />, color: "from-purple-500 to-violet-600", count: "1,234 courses" },
+  { id: 6, name: "Marketing", slug: "marketing", icon: <TrendingUp className="w-5 h-5" />, color: "from-yellow-500 to-orange-600", count: "654 courses" },
+  { id: 7, name: "Technology", slug: "technology", icon: <Monitor className="w-5 h-5" />, color: "from-indigo-500 to-purple-600", count: "2,123 courses" },
+  { id: 8, name: "Photography", slug: "photography", icon: <Camera className="w-5 h-5" />, color: "from-orange-500 to-red-600", count: "876 courses" },
 ];
 
+// API call function
+const fetchCategories = async () => {
+  try {
+    const response = await fetch(CATEGORIES_API);
+    if (!response.ok) throw new Error('Failed to fetch categories');
+    const data = await response.json();
+    
+    // Map API data to include icons and colors (you might need to adjust this based on your API response)
+    return data.map((category, index) => ({
+      ...category,
+      icon: staticCategories[index % staticCategories.length]?.icon || <BookOpen className="w-5 h-5" />,
+      color: staticCategories[index % staticCategories.length]?.color || "from-blue-500 to-blue-600",
+      count: category.count || `${Math.floor(Math.random() * 3000) + 500} courses`
+    }));
+  } catch (error) {
+    console.error('Error fetching categories:', error);
+    // Fallback to static categories
+    return staticCategories;
+  }
+};
+
 export default function Header() {
+  const navigate = useNavigate();
   const [showCategories, setShowCategories] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchFocused, setSearchFocused] = useState(false);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  // TODO: Replace with actual API call
-  // const fetchCategories = async () => {
-  //   try {
-  //     setLoading(true);
-  //     const response = await fetch('/api/categories');
-  //     const data = await response.json();
-  //     setCategories(data);
-  //   } catch (error) {
-  //     console.error('Error fetching categories:', error);
-  //     // Fallback to static categories
-  //     setCategories(staticCategories);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-  // Initialize categories
+  // Load categories on component mount
   useEffect(() => {
-    // TODO: Uncomment when API is ready
-    // fetchCategories();
-    
-    // Using static data for now
-    setCategories(staticCategories);
+    loadCategories();
   }, []);
+
+  const loadCategories = async () => {
+    setLoading(true);
+    try {
+      const categoriesData = await fetchCategories();
+      setCategories(categoriesData);
+    } catch (error) {
+      console.error('Failed to load categories:', error);
+      setCategories(staticCategories);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCategoryClick = (categorySlug) => {
+    // Navigate to home page with category parameter
+    navigate(`/?category=${categorySlug}`);
+    // Close mobile menu if open
+    setMobileMenuOpen(false);
+  };
 
   const handleTelegramJoin = () => {
     window.open('https://t.me/your_telegram_group', '_blank');
@@ -136,21 +163,29 @@ export default function Header() {
       <div className="hidden md:block bg-gradient-to-r from-gray-900 via-purple-900 to-gray-900 py-4 lg:py-6 overflow-hidden relative">
         <div className="absolute inset-0 bg-gradient-to-r from-purple-600/10 to-pink-600/10"></div>
         <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 relative">
-          <div className="flex items-center justify-center gap-4 lg:gap-6 xl:gap-10 flex-wrap">
-            {categories.slice(0, 6).map((cat, index) => (
-              <button
-                key={cat.id || index}
-                className="group flex items-center gap-2 lg:gap-3 text-white/90 hover:text-white transition-all duration-500 relative transform hover:scale-110"
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-                <div className={`w-8 h-8 lg:w-10 lg:h-10 rounded-xl lg:rounded-2xl bg-gradient-to-r ${cat.color} flex items-center justify-center text-white shadow-2xl group-hover:scale-125 group-hover:rotate-12 transition-all duration-500`}>
-                  {cat.icon}
-                </div>
-                <span className="font-bold text-sm lg:text-lg group-hover:text-purple-300 transition-colors duration-300 whitespace-nowrap">{cat.label}</span>
-                <div className="absolute -bottom-2 lg:-bottom-3 left-0 w-0 h-1 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full group-hover:w-full transition-all duration-700"></div>
-              </button>
-            ))}
-          </div>
+          {loading ? (
+            <div className="flex items-center justify-center">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+              <span className="ml-3 text-white/80">Loading categories...</span>
+            </div>
+          ) : (
+            <div className="flex items-center justify-center gap-4 lg:gap-6 xl:gap-10 flex-wrap">
+              {categories.slice(0, 6).map((cat, index) => (
+                <button
+                  key={cat.id || index}
+                  onClick={() => handleCategoryClick(cat.slug)}
+                  className="group flex items-center gap-2 lg:gap-3 text-white/90 hover:text-white transition-all duration-500 relative transform hover:scale-110 cursor-pointer"
+                  style={{ animationDelay: `${index * 0.1}s` }}
+                >
+                  <div className={`w-8 h-8 lg:w-10 lg:h-10 rounded-xl lg:rounded-2xl bg-gradient-to-r ${cat.color} flex items-center justify-center text-white shadow-2xl group-hover:scale-125 group-hover:rotate-12 transition-all duration-500`}>
+                    {cat.icon}
+                  </div>
+                  <span className="font-bold text-sm lg:text-lg group-hover:text-purple-300 transition-colors duration-300 whitespace-nowrap">{cat.name}</span>
+                  <div className="absolute -bottom-2 lg:-bottom-3 left-0 w-0 h-1 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full group-hover:w-full transition-all duration-700"></div>
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
@@ -195,23 +230,30 @@ export default function Header() {
           {/* Mobile Categories */}
           <div className="border-t border-gray-100 p-4 bg-gradient-to-br from-gray-50 to-purple-50">
             <h4 className="font-black text-gray-900 mb-4 text-lg">Popular Categories</h4>
-            <div className="grid grid-cols-1 gap-3">
-              {categories.slice(0, 6).map((cat) => (
-                <button
-                  key={cat.id}
-                  className="flex items-center gap-4 p-4 rounded-xl hover:bg-white hover:shadow-lg transition-all duration-300 border border-transparent hover:border-purple-100"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-r ${cat.color} flex items-center justify-center text-white shadow-lg`}>
-                    {cat.icon}
-                  </div>
-                  <div className="flex-1 text-left">
-                    <span className="font-bold text-gray-700 text-lg">{cat.label}</span>
-                    <div className="text-sm text-gray-500">{cat.count}</div>
-                  </div>
-                </button>
-              ))}
-            </div>
+            {loading ? (
+              <div className="flex items-center justify-center py-8">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600"></div>
+                <span className="ml-3 text-gray-600">Loading categories...</span>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 gap-3">
+                {categories.slice(0, 6).map((cat) => (
+                  <button
+                    key={cat.id}
+                    onClick={() => handleCategoryClick(cat.slug)}
+                    className="flex items-center gap-4 p-4 rounded-xl hover:bg-white hover:shadow-lg transition-all duration-300 border border-transparent hover:border-purple-100 text-left w-full"
+                  >
+                    <div className={`w-12 h-12 rounded-xl bg-gradient-to-r ${cat.color} flex items-center justify-center text-white shadow-lg`}>
+                      {cat.icon}
+                    </div>
+                    <div className="flex-1">
+                      <span className="font-bold text-gray-700 text-lg">{cat.name}</span>
+                      <div className="text-sm text-gray-500">{cat.count}</div>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       )}

@@ -14,7 +14,7 @@ createRoot(document.getElementById('root')).render(
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/course/:id" element={<CourseDetail />} />
+        <Route path="/course/:slug" element={<CourseDetail />} />
         {/* <Route path="courses" element={<Courses />} />
         <Route path='about' element={<About/>} />
         <Route path='contact' element={<Contact/>} /> */}
@@ -22,4 +22,3 @@ createRoot(document.getElementById('root')).render(
     </BrowserRouter>
   </StrictMode>
 )
-

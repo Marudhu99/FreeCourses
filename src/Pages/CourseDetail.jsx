@@ -5,7 +5,7 @@ import Header from '../Components/Header';
 import Footer from '../Components/Footer';
 
 const CourseDetail = () => {
-  const { id } = useParams();
+  const { slug } = useParams();
   const navigate = useNavigate();
   const [course, setCourse] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -13,14 +13,14 @@ const CourseDetail = () => {
 
   useEffect(() => {
     fetchCourseDetail();
-  }, [id]);
+  }, [slug]);
 
   const fetchCourseDetail = async () => {
     try {
       setLoading(true);
       // API call for course details (commented for now)
       /*
-      const response = await fetch(`/api/courses/${id}`);
+      const response = await fetch(`/api/courses/${slug}`);
       if (!response.ok) throw new Error('Course not found');
       const courseData = await response.json();
       setCourse(courseData);
@@ -31,6 +31,7 @@ const CourseDetail = () => {
         {
           id: 1,
           title: "Complete Web Development Bootcamp",
+          slug: "complete-web-development-bootcamp",
           description: "Learn HTML, CSS, JavaScript, React, Node.js and become a full-stack developer",
           image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&h=400&fit=crop",
           category: "Development",
@@ -57,6 +58,7 @@ const CourseDetail = () => {
         {
           id: 2,
           title: "Digital Marketing Masterclass",
+          slug: "digital-marketing-masterclass",
           description: "Complete guide to SEO, social media marketing, and online advertising strategies",
           image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=400&fit=crop",
           category: "Marketing",
@@ -83,6 +85,7 @@ const CourseDetail = () => {
         {
           id: 3,
           title: "UI/UX Design Fundamentals",
+          slug: "ui-ux-design-fundamentals",
           description: "Learn user interface and user experience design principles and tools",
           image: "https://images.unsplash.com/photo-1586717791821-3f44a563fa4c?w=800&h=400&fit=crop",
           category: "Design",
@@ -109,6 +112,7 @@ const CourseDetail = () => {
         {
           id: 4,
           title: "Python for Data Science",
+          slug: "python-for-data-science",
           description: "Complete Python programming course focused on data analysis and machine learning",
           image: "https://images.unsplash.com/photo-1526379095098-d400fd0bf935?w=800&h=400&fit=crop",
           category: "Development",
@@ -135,6 +139,7 @@ const CourseDetail = () => {
         {
           id: 5,
           title: "Business Strategy and Leadership",
+          slug: "business-strategy-and-leadership",
           description: "Develop leadership skills and learn strategic business planning techniques",
           image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&h=400&fit=crop",
           category: "Business",
@@ -161,6 +166,7 @@ const CourseDetail = () => {
         {
           id: 6,
           title: "Mobile App Development with Flutter",
+          slug: "mobile-app-development-with-flutter",
           description: "Build cross-platform mobile apps for iOS and Android using Flutter and Dart",
           image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=800&h=400&fit=crop",
           category: "Development",
@@ -187,7 +193,7 @@ const CourseDetail = () => {
       ];
 
       setTimeout(() => {
-        const foundCourse = coursesData.find(c => c.id === parseInt(id));
+        const foundCourse = coursesData.find(c => c.slug === slug);
         if (foundCourse) {
           setCourse(foundCourse);
         } else {
