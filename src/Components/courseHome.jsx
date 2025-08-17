@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Filter, ExternalLink, Clock, Users, Star, ArrowLeft } from 'lucide-react';
+import { Search, Filter, ExternalLink, Clock, Users, Star, ArrowLeft, BookOpen, Award, TrendingUp, Shield, CheckCircle, Play, Download } from 'lucide-react';
 
 // Sample JSON data - replace this with your actual JSON file data
 const coursesData = [
@@ -17,6 +17,10 @@ const coursesData = [
     udemyLink: "https://udemy.com/course/example-1",
     fullDescription: "Master web development with this comprehensive bootcamp. You'll learn everything from basic HTML and CSS to advanced React and Node.js concepts. Perfect for beginners who want to become professional developers.",
     prerequisites: "Basic computer skills",
+    level: "Beginner",
+    language: "English",
+    lastUpdated: "2024",
+    certificate: true,
     whatYoullLearn: [
       "Build responsive websites with HTML and CSS",
       "Create interactive web applications with JavaScript",
@@ -39,6 +43,10 @@ const coursesData = [
     udemyLink: "https://udemy.com/course/example-2",
     fullDescription: "Transform your business with proven digital marketing strategies. Learn SEO, social media marketing, Google Ads, and content marketing from industry experts.",
     prerequisites: "No prior experience needed",
+    level: "Intermediate",
+    language: "English",
+    lastUpdated: "2024",
+    certificate: true,
     whatYoullLearn: [
       "Master SEO techniques for better rankings",
       "Create effective social media campaigns",
@@ -61,6 +69,10 @@ const coursesData = [
     udemyLink: "https://udemy.com/course/example-3",
     fullDescription: "Create stunning user interfaces and exceptional user experiences. Master design thinking, wireframing, prototyping, and user testing methodologies.",
     prerequisites: "Creative mindset, no technical skills required",
+    level: "Beginner",
+    language: "English",
+    lastUpdated: "2024",
+    certificate: true,
     whatYoullLearn: [
       "Understand UX design principles",
       "Create wireframes and prototypes",
@@ -83,6 +95,10 @@ const coursesData = [
     udemyLink: "https://udemy.com/course/example-4",
     fullDescription: "Dive into Python programming for data science and machine learning. Learn pandas, numpy, matplotlib, and scikit-learn through hands-on projects.",
     prerequisites: "Basic programming knowledge helpful but not required",
+    level: "Intermediate",
+    language: "English",
+    lastUpdated: "2024",
+    certificate: true,
     whatYoullLearn: [
       "Master Python programming fundamentals",
       "Analyze data with pandas and numpy",
@@ -105,6 +121,10 @@ const coursesData = [
     udemyLink: "https://udemy.com/course/example-5",
     fullDescription: "Transform your leadership abilities and master strategic business thinking. Perfect for managers, entrepreneurs, and aspiring leaders.",
     prerequisites: "Some work experience preferred",
+    level: "Advanced",
+    language: "English",
+    lastUpdated: "2024",
+    certificate: true,
     whatYoullLearn: [
       "Develop effective leadership skills",
       "Create comprehensive business strategies",
@@ -127,6 +147,10 @@ const coursesData = [
     udemyLink: "https://udemy.com/course/example-6",
     fullDescription: "Create beautiful, native mobile applications for both iOS and Android using Google's Flutter framework and Dart programming language.",
     prerequisites: "Basic programming experience recommended",
+    level: "Intermediate",
+    language: "English",
+    lastUpdated: "2024",
+    certificate: true,
     whatYoullLearn: [
       "Master Flutter framework and Dart language",
       "Build responsive mobile interfaces",
@@ -136,6 +160,20 @@ const coursesData = [
     ]
   }
 ];
+
+// API call function (commented out for now)
+/*
+const fetchCourses = async () => {
+  try {
+    const response = await fetch('/api/courses');
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching courses:', error);
+    return [];
+  }
+};
+*/
 
 const App = () => {
   const [courses, setCourses] = useState([]);
@@ -149,12 +187,13 @@ const App = () => {
   const categories = ['All', ...new Set(coursesData.map(course => course.category))];
 
   useEffect(() => {
-    // Simulate loading from JSON file
+    // Simulate loading from JSON file or API
+    // Replace this with actual API call: fetchCourses()
     setTimeout(() => {
       setCourses(coursesData);
       setFilteredCourses(coursesData);
       setIsLoading(false);
-    }, 500);
+    }, 800);
   }, []);
 
   useEffect(() => {
@@ -170,79 +209,119 @@ const App = () => {
       filtered = filtered.filter(course =>
         course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         course.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        course.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()))
+        course.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        course.instructor.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
     setFilteredCourses(filtered);
   }, [courses, searchTerm, selectedCategory]);
 
+  const getLevelColor = (level) => {
+    switch (level) {
+      case 'Beginner': return 'bg-green-100 text-green-800';
+      case 'Intermediate': return 'bg-yellow-100 text-yellow-800';
+      case 'Advanced': return 'bg-red-100 text-red-800';
+      default: return 'bg-gray-100 text-gray-800';
+    }
+  };
+
   const CourseCard = ({ course }) => (
-    <div className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden">
-      <div className="relative">
+    <div className="group bg-white rounded-2xl shadow-md hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 overflow-hidden border border-gray-100">
+      <div className="relative overflow-hidden">
         <img 
           src={course.image} 
           alt={course.title}
-          className="w-full h-48 object-cover"
+          className="w-full h-48 sm:h-52 object-cover group-hover:scale-110 transition-transform duration-500"
           loading="lazy"
         />
-        <div className="absolute top-3 right-3">
-          <span className="bg-blue-600 text-white px-2 py-1 rounded-full text-xs font-semibold">
+        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+        <div className="absolute top-3 right-3 flex gap-2">
+          <span className="bg-gradient-to-r from-green-500 to-green-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">
             FREE
+          </span>
+          {course.certificate && (
+            <span className="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-2 py-1 rounded-full text-xs font-semibold shadow-lg">
+              <Award size={12} className="inline mr-1" />
+              Certificate
+            </span>
+          )}
+        </div>
+        <div className="absolute top-3 left-3">
+          <span className={`px-2 py-1 rounded-full text-xs font-semibold ${getLevelColor(course.level)}`}>
+            {course.level}
           </span>
         </div>
       </div>
       
       <div className="p-6">
-        <div className="mb-2">
-          <span className="inline-block bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded-full">
+        <div className="flex items-center justify-between mb-3">
+          <span className="inline-block bg-gradient-to-r from-purple-100 to-pink-100 text-purple-800 text-xs px-3 py-1 rounded-full font-medium">
             {course.category}
           </span>
+          <div className="flex items-center gap-1 text-yellow-500">
+            <Star size={14} className="fill-current" />
+            <span className="text-sm font-semibold text-gray-700">{course.rating}</span>
+          </div>
         </div>
         
-        <h3 className="font-bold text-lg mb-2 text-gray-900 line-clamp-2">
+        <h3 className="font-bold text-lg mb-3 text-gray-900 line-clamp-2 group-hover:text-blue-600 transition-colors duration-200">
           {course.title}
         </h3>
         
-        <p className="text-gray-600 text-sm mb-4 line-clamp-3">
+        <p className="text-gray-600 text-sm mb-4 line-clamp-3 leading-relaxed">
           {course.description}
         </p>
         
         <div className="flex items-center justify-between text-xs text-gray-500 mb-4">
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-1">
-              <Clock size={12} />
-              <span>{course.duration}</span>
+              <Clock size={12} className="text-blue-500" />
+              <span className="font-medium">{course.duration}</span>
             </div>
             <div className="flex items-center gap-1">
-              <Users size={12} />
-              <span>{course.students.toLocaleString()}</span>
+              <Users size={12} className="text-green-500" />
+              <span className="font-medium">{course.students.toLocaleString()}</span>
             </div>
-            <div className="flex items-center gap-1">
-              <Star size={12} className="fill-yellow-400 text-yellow-400" />
-              <span>{course.rating}</span>
-            </div>
+          </div>
+        </div>
+
+        <div className="mb-4">
+          <p className="text-xs text-gray-500 mb-2">By {course.instructor}</p>
+          <div className="flex flex-wrap gap-1">
+            {course.tags.slice(0, 3).map((tag, index) => (
+              <span 
+                key={index}
+                className="bg-gray-50 text-gray-600 text-xs px-2 py-1 rounded-md border"
+              >
+                {tag}
+              </span>
+            ))}
+            {course.tags.length > 3 && (
+              <span className="text-xs text-gray-400">+{course.tags.length - 3} more</span>
+            )}
           </div>
         </div>
         
         <button
           onClick={() => setSelectedCourse(course)}
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200"
+          className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl"
         >
-          View Course
+          <Play size={16} className="inline mr-2" />
+          View Course Details
         </button>
       </div>
     </div>
   );
 
   const CoursePage = ({ course }) => (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
       {/* Header */}
-      <div className="bg-white shadow-sm sticky top-0 z-10">
+      <div className="bg-white shadow-sm sticky top-0 z-10 border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <button
             onClick={() => setSelectedCourse(null)}
-            className="flex items-center gap-2 text-blue-600 hover:text-blue-800 font-medium"
+            className="flex items-center gap-2 text-blue-600 hover:text-blue-800 font-medium transition-colors duration-200"
           >
             <ArrowLeft size={20} />
             Back to Courses
@@ -253,44 +332,89 @@ const App = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Content */}
-          <div className="lg:col-span-2">
-            <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-              <img 
-                src={course.image} 
-                alt={course.title}
-                className="w-full h-64 object-cover"
-              />
+          <div className="lg:col-span-2 space-y-6">
+            <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+              <div className="relative">
+                <img 
+                  src={course.image} 
+                  alt={course.title}
+                  className="w-full h-64 sm:h-80 object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+                <div className="absolute bottom-6 left-6 right-6">
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className={`px-3 py-1 rounded-full text-sm font-semibold ${getLevelColor(course.level)}`}>
+                      {course.level}
+                    </span>
+                    <span className="bg-white/20 backdrop-blur-sm text-white px-3 py-1 rounded-full text-sm font-semibold">
+                      {course.category}
+                    </span>
+                  </div>
+                </div>
+              </div>
               
               <div className="p-8">
-                <div className="mb-4">
-                  <span className="inline-block bg-blue-100 text-blue-800 text-sm px-3 py-1 rounded-full">
-                    {course.category}
-                  </span>
-                </div>
-                
-                <h1 className="text-3xl font-bold text-gray-900 mb-4">
+                <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
                   {course.title}
                 </h1>
                 
-                <p className="text-gray-600 text-lg mb-6">
+                <p className="text-gray-600 text-lg mb-6 leading-relaxed">
                   {course.fullDescription}
                 </p>
+
+                {/* Trust Indicators */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8 p-6 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl">
+                  <div className="text-center">
+                    <div className="flex items-center justify-center w-12 h-12 bg-blue-100 rounded-full mx-auto mb-2">
+                      <Users className="text-blue-600" size={20} />
+                    </div>
+                    <div className="text-2xl font-bold text-gray-900">{course.students.toLocaleString()}</div>
+                    <div className="text-sm text-gray-600">Students</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="flex items-center justify-center w-12 h-12 bg-yellow-100 rounded-full mx-auto mb-2">
+                      <Star className="text-yellow-600 fill-current" size={20} />
+                    </div>
+                    <div className="text-2xl font-bold text-gray-900">{course.rating}</div>
+                    <div className="text-sm text-gray-600">Rating</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="flex items-center justify-center w-12 h-12 bg-green-100 rounded-full mx-auto mb-2">
+                      <Clock className="text-green-600" size={20} />
+                    </div>
+                    <div className="text-2xl font-bold text-gray-900">{course.duration}</div>
+                    <div className="text-sm text-gray-600">Duration</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="flex items-center justify-center w-12 h-12 bg-purple-100 rounded-full mx-auto mb-2">
+                      <Award className="text-purple-600" size={20} />
+                    </div>
+                    <div className="text-2xl font-bold text-gray-900">Yes</div>
+                    <div className="text-sm text-gray-600">Certificate</div>
+                  </div>
+                </div>
                 
                 <div className="mb-8">
-                  <h3 className="text-xl font-semibold mb-4">What you'll learn</h3>
-                  <ul className="space-y-2">
+                  <h3 className="text-2xl font-semibold mb-6 flex items-center gap-2">
+                    <BookOpen className="text-blue-600" size={24} />
+                    What you'll learn
+                  </h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {course.whatYoullLearn.map((item, index) => (
-                      <li key={index} className="flex items-start gap-3">
-                        <div className="w-2 h-2 bg-blue-600 rounded-full mt-2 flex-shrink-0"></div>
+                      <div key={index} className="flex items-start gap-3 p-3 bg-green-50 rounded-lg">
+                        <CheckCircle className="text-green-600 mt-0.5 flex-shrink-0" size={16} />
                         <span className="text-gray-700">{item}</span>
-                      </li>
+                      </div>
                     ))}
-                  </ul>
+                  </div>
                 </div>
                 
                 <div className="border-t pt-6">
-                  <h3 className="text-lg font-semibold mb-2">Prerequisites</h3>
-                  <p className="text-gray-600">{course.prerequisites}</p>
+                  <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
+                    <Shield className="text-blue-600" size={20} />
+                    Prerequisites
+                  </h3>
+                  <p className="text-gray-600 bg-blue-50 p-4 rounded-lg">{course.prerequisites}</p>
                 </div>
               </div>
             </div>
@@ -298,31 +422,46 @@ const App = () => {
           
           {/* Sidebar */}
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-xl shadow-lg p-6 sticky top-24">
+            <div className="bg-white rounded-2xl shadow-lg p-6 sticky top-24">
               <div className="text-center mb-6">
-                <div className="text-3xl font-bold text-green-600 mb-2">FREE</div>
-                <div className="text-gray-500 text-sm">Usually $49.99</div>
+                <div className="text-4xl font-bold bg-gradient-to-r from-green-600 to-green-700 bg-clip-text text-transparent mb-2">
+                  FREE
+                </div>
+                <div className="text-gray-500 text-sm line-through">Usually $49.99</div>
+                <div className="text-green-600 text-sm font-semibold">100% Off Limited Time</div>
               </div>
               
               <div className="space-y-4 mb-6">
-                <div className="flex items-center justify-between">
-                  <span className="text-gray-600">Instructor:</span>
-                  <span className="font-medium">{course.instructor}</span>
+                <div className="flex items-center justify-between py-2 border-b border-gray-100">
+                  <span className="text-gray-600 flex items-center gap-2">
+                    <Users size={16} />
+                    Instructor:
+                  </span>
+                  <span className="font-medium text-blue-600">{course.instructor}</span>
                 </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-gray-600">Duration:</span>
+                <div className="flex items-center justify-between py-2 border-b border-gray-100">
+                  <span className="text-gray-600 flex items-center gap-2">
+                    <Clock size={16} />
+                    Duration:
+                  </span>
                   <span className="font-medium">{course.duration}</span>
                 </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-gray-600">Students:</span>
-                  <span className="font-medium">{course.students.toLocaleString()}</span>
+                <div className="flex items-center justify-between py-2 border-b border-gray-100">
+                  <span className="text-gray-600 flex items-center gap-2">
+                    <TrendingUp size={16} />
+                    Level:
+                  </span>
+                  <span className={`font-medium px-2 py-1 rounded text-sm ${getLevelColor(course.level)}`}>
+                    {course.level}
+                  </span>
                 </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-gray-600">Rating:</span>
-                  <div className="flex items-center gap-1">
-                    <Star size={16} className="fill-yellow-400 text-yellow-400" />
-                    <span className="font-medium">{course.rating}</span>
-                  </div>
+                <div className="flex items-center justify-between py-2 border-b border-gray-100">
+                  <span className="text-gray-600">Language:</span>
+                  <span className="font-medium">{course.language}</span>
+                </div>
+                <div className="flex items-center justify-between py-2">
+                  <span className="text-gray-600">Updated:</span>
+                  <span className="font-medium">{course.lastUpdated}</span>
                 </div>
               </div>
               
@@ -330,19 +469,35 @@ const App = () => {
                 href={course.udemyLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center gap-2"
+                className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transform hover:scale-105"
               >
-                Go to Udemy
                 <ExternalLink size={18} />
+                Enroll on Udemy
               </a>
+
+              <div className="mt-6 p-4 bg-green-50 rounded-xl">
+                <div className="flex items-center gap-2 text-green-700 font-semibold mb-2">
+                  <Shield size={16} />
+                  Trust & Safety
+                </div>
+                <ul className="text-sm text-green-600 space-y-1">
+                  <li>✓ Verified instructor</li>
+                  <li>✓ 30-day money-back guarantee</li>
+                  <li>✓ Lifetime access</li>
+                  <li>✓ Mobile and TV access</li>
+                </ul>
+              </div>
               
               <div className="mt-6">
-                <h4 className="font-semibold mb-3">Tags</h4>
+                <h4 className="font-semibold mb-3 flex items-center gap-2">
+                  <BookOpen size={16} />
+                  Course Tags
+                </h4>
                 <div className="flex flex-wrap gap-2">
                   {course.tags.map((tag, index) => (
                     <span 
                       key={index}
-                      className="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded-full"
+                      className="bg-gradient-to-r from-gray-100 to-gray-200 text-gray-700 text-xs px-3 py-1 rounded-full font-medium hover:from-blue-100 hover:to-blue-200 hover:text-blue-700 transition-colors duration-200 cursor-pointer"
                     >
                       {tag}
                     </span>
@@ -361,42 +516,58 @@ const App = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50">
       {/* Header */}
-      <header className="bg-white shadow-sm">
+      <header className="bg-white/80 backdrop-blur-sm shadow-sm sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold text-gray-900 mb-2">
+            <h1 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 bg-clip-text text-transparent mb-4">
               Free Udemy Courses
             </h1>
-            <p className="text-xl text-gray-600">
-              Discover amazing free courses to boost your skills
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              Discover premium courses at zero cost. Boost your skills with verified instructors and earn certificates.
             </p>
+            
+            {/* Trust indicators */}
+            <div className="flex items-center justify-center gap-8 mt-6 text-sm text-gray-600">
+              <div className="flex items-center gap-1">
+                <Shield className="text-green-500" size={16} />
+                <span>Verified Courses</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <Award className="text-blue-500" size={16} />
+                <span>Certificates Included</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <Users className="text-purple-500" size={16} />
+                <span>50K+ Students</span>
+              </div>
+            </div>
           </div>
           
           {/* Search and Filter */}
-          <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
+          <div className="flex flex-col sm:flex-row gap-4 items-center justify-center max-w-4xl mx-auto">
             <div className="relative flex-1 max-w-md">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
               <input
                 type="text"
-                placeholder="Search courses..."
+                placeholder="Search courses, instructors, or skills..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full pl-12 pr-4 py-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm bg-white/80 backdrop-blur-sm"
               />
             </div>
             
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
               <Filter size={20} className="text-gray-400" />
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
-                className="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="px-6 py-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm bg-white/80 backdrop-blur-sm"
               >
                 {categories.map(category => (
                   <option key={category} value={category}>
-                    {category}
+                    {category === 'All' ? 'All Categories' : category}
                   </option>
                 ))}
               </select>
@@ -408,33 +579,40 @@ const App = () => {
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {isLoading ? (
-          <div className="text-center py-12">
-            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-            <p className="mt-4 text-gray-600">Loading courses...</p>
+          <div className="text-center py-20">
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-blue-600 border-t-transparent"></div>
+            <p className="mt-6 text-gray-600 text-lg">Loading amazing courses for you...</p>
           </div>
         ) : (
           <>
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-semibold text-gray-900">
-                {filteredCourses.length} Course{filteredCourses.length !== 1 ? 's' : ''} Found
+            <div className="flex flex-col sm:flex-row items-center justify-between mb-8">
+              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4 sm:mb-0">
+                {filteredCourses.length} Premium Course{filteredCourses.length !== 1 ? 's' : ''} Available
               </h2>
+              <div className="text-sm text-gray-600 bg-white/60 backdrop-blur-sm px-4 py-2 rounded-full">
+                Updated daily • All courses verified
+              </div>
             </div>
             
             {filteredCourses.length === 0 ? (
-              <div className="text-center py-12">
-                <p className="text-gray-600 text-lg">No courses found matching your criteria.</p>
+              <div className="text-center py-20">
+                <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <Search className="text-gray-400" size={32} />
+                </div>
+                <h3 className="text-2xl font-semibold text-gray-900 mb-4">No courses found</h3>
+                <p className="text-gray-600 text-lg mb-6">Try adjusting your search or filter criteria</p>
                 <button
                   onClick={() => {
                     setSearchTerm('');
                     setSelectedCategory('All');
                   }}
-                  className="mt-4 text-blue-600 hover:text-blue-800 font-medium"
+                  className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-3 rounded-xl transition-colors duration-200"
                 >
-                  Clear filters
+                  Clear all filters
                 </button>
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                 {filteredCourses.map(course => (
                   <CourseCard key={course.id} course={course} />
                 ))}

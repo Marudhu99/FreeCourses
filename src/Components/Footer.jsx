@@ -6,15 +6,12 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between gap-8">
         {/* Logo & About */}
         <div className="flex-1 mb-8 md:mb-0">
-          <div className="flex items-center gap-2 mb-4">
-            <svg width="36" height="36" viewBox="0 0 40 40" fill="none">
-              <text x="0" y="30" fontFamily="Arial Black" fontSize="32" fill="#ff5a5f">Cv</text>
-            </svg>
-            <span className="text-xl font-bold text-white">Course</span>
-            <span className="text-xl font-bold text-red-400">vania</span>
+          <div className="flex items-center mb-4">
+            <span className="text-xl font-bold text-white">Kore</span>
+            <span className="text-xl font-bold text-red-400">lium</span>
           </div>
           <p className="text-gray-400 text-sm max-w-xs">
-            Coursevania is your trusted source for free and premium online courses. Learn new skills and boost your career with top instructors.
+            Korelium is your trusted source for free and premium online courses. Learn new skills and boost your career with top instructors.
           </p>
         </div>
         {/* Links */}
@@ -59,7 +56,7 @@ export default function Footer() {
         </div>
       </div>
       <div className="border-t border-gray-800 mt-10 pt-6 text-center text-xs text-gray-500">
-        &copy; {new Date().getFullYear()} Coursevania. All rights reserved.
+        &copy; {new Date().getFullYear()} Korelium. All rights reserved.
       </div>
     </footer>
   );
