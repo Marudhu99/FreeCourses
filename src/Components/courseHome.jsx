@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Search, Filter, Clock, Users, Star, BookOpen, Award, Shield, Play } from 'lucide-react';
 
-// API endpoints - replace with your actual API URLs
-const API_BASE_URL = 'https://your-api-domain.com/api'; // Replace with your actual API base URL
+// API endpoints
+const API_BASE_URL = 'http://localhost:3000/api';
 const COURSES_API = `${API_BASE_URL}/courses`;
-const CATEGORIES_API = `${API_BASE_URL}/categories`;
+const CATEGORIES_API = `${API_BASE_URL}/course-categories`;
 
 // API call functions
 const fetchCategories = async () => {
@@ -18,7 +18,7 @@ const fetchCategories = async () => {
     console.error('Error fetching categories:', error);
     // Fallback categories if API fails
     return [
-      { id: 1, name: 'Development', slug: 'development' },
+      { id: 1, name: 'Development', slug: 'webdevelopment' },
       { id: 2, name: 'Marketing', slug: 'marketing' },
       { id: 3, name: 'Design', slug: 'design' },
       { id: 4, name: 'Business', slug: 'business' }
@@ -51,7 +51,7 @@ const fetchCourses = async (categorySlug = null) => {
         description: "Learn HTML, CSS, JavaScript, React, Node.js and become a full-stack developer",
         image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=400&h=200&fit=crop",
         category: "Development",
-        categorySlug: "development",
+        categorySlug: "webdevelopment",
         tags: ["JavaScript", "React", "Node.js", "HTML", "CSS"],
         instructor: "John Smith",
         duration: "40 hours",
@@ -70,146 +70,6 @@ const fetchCourses = async (categorySlug = null) => {
           "Develop modern frontends with React",
           "Build backend APIs with Node.js",
           "Deploy applications to production"
-        ]
-      },
-      {
-        id: 2,
-        title: "Digital Marketing Masterclass",
-        slug: "digital-marketing-masterclass",
-        description: "Complete guide to SEO, social media marketing, and online advertising strategies",
-        image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=200&fit=crop",
-        category: "Marketing",
-        categorySlug: "marketing",
-        tags: ["SEO", "Social Media", "Google Ads", "Content Marketing"],
-        instructor: "Sarah Johnson",
-        duration: "25 hours",
-        students: 8930,
-        rating: 4.7,
-        udemyLink: "https://udemy.com/course/example-2",
-        fullDescription: "Transform your business with proven digital marketing strategies. Learn SEO, social media marketing, Google Ads, and content marketing from industry experts.",
-        prerequisites: "No prior experience needed",
-        level: "Intermediate",
-        language: "English",
-        lastUpdated: "2024",
-        certificate: true,
-        whatYoullLearn: [
-          "Master SEO techniques for better rankings",
-          "Create effective social media campaigns",
-          "Set up and optimize Google Ads",
-          "Develop content marketing strategies",
-          "Track and analyze marketing performance"
-        ]
-      },
-      {
-        id: 3,
-        title: "UI/UX Design Fundamentals",
-        slug: "ui-ux-design-fundamentals",
-        description: "Learn user interface and user experience design principles and tools",
-        image: "https://images.unsplash.com/photo-1586717791821-3f44a563fa4c?w=400&h=200&fit=crop",
-        category: "Design",
-        categorySlug: "design",
-        tags: ["UI Design", "UX Research", "Figma", "Prototyping"],
-        instructor: "Mike Chen",
-        duration: "30 hours",
-        students: 12340,
-        rating: 4.9,
-        udemyLink: "https://udemy.com/course/example-3",
-        fullDescription: "Create stunning user interfaces and exceptional user experiences. Master design thinking, wireframing, prototyping, and user testing methodologies.",
-        prerequisites: "Creative mindset, no technical skills required",
-        level: "Beginner",
-        language: "English",
-        lastUpdated: "2024",
-        certificate: true,
-        whatYoullLearn: [
-          "Understand UX design principles",
-          "Create wireframes and prototypes",
-          "Master Figma for design work",
-          "Conduct user research and testing",
-          "Build a professional design portfolio"
-        ]
-      },
-      {
-        id: 4,
-        title: "Python for Data Science",
-        slug: "python-for-data-science",
-        description: "Complete Python programming course focused on data analysis and machine learning",
-        image: "https://images.unsplash.com/photo-1526379095098-d400fd0bf935?w=400&h=200&fit=crop",
-        category: "Development",
-        categorySlug: "development",
-        tags: ["Python", "Data Science", "Machine Learning", "Pandas"],
-        instructor: "Dr. Emma Wilson",
-        duration: "45 hours",
-        students: 20180,
-        rating: 4.8,
-        udemyLink: "https://udemy.com/course/example-4",
-        fullDescription: "Dive into Python programming for data science and machine learning. Learn pandas, numpy, matplotlib, and scikit-learn through hands-on projects.",
-        prerequisites: "Basic programming knowledge helpful but not required",
-        level: "Intermediate",
-        language: "English",
-        lastUpdated: "2024",
-        certificate: true,
-        whatYoullLearn: [
-          "Master Python programming fundamentals",
-          "Analyze data with pandas and numpy",
-          "Create visualizations with matplotlib",
-          "Build machine learning models",
-          "Work on real-world data science projects"
-        ]
-      },
-      {
-        id: 5,
-        title: "Business Strategy and Leadership",
-        slug: "business-strategy-and-leadership",
-        description: "Develop leadership skills and learn strategic business planning techniques",
-        image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=200&fit=crop",
-        category: "Business",
-        categorySlug: "business",
-        tags: ["Leadership", "Strategy", "Management", "Business Planning"],
-        instructor: "Robert Brown",
-        duration: "20 hours",
-        students: 6750,
-        rating: 4.6,
-        udemyLink: "https://udemy.com/course/example-5",
-        fullDescription: "Transform your leadership abilities and master strategic business thinking. Perfect for managers, entrepreneurs, and aspiring leaders.",
-        prerequisites: "Some work experience preferred",
-        level: "Advanced",
-        language: "English",
-        lastUpdated: "2024",
-        certificate: true,
-        whatYoullLearn: [
-          "Develop effective leadership skills",
-          "Create comprehensive business strategies",
-          "Master team management techniques",
-          "Learn decision-making frameworks",
-          "Build organizational culture"
-        ]
-      },
-      {
-        id: 6,
-        title: "Mobile App Development with Flutter",
-        slug: "mobile-app-development-with-flutter",
-        description: "Build cross-platform mobile apps for iOS and Android using Flutter and Dart",
-        image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=400&h=200&fit=crop",
-        category: "Development",
-        categorySlug: "development",
-        tags: ["Flutter", "Dart", "Mobile Development", "iOS", "Android"],
-        instructor: "Lisa Park",
-        duration: "35 hours",
-        students: 11230,
-        rating: 4.7,
-        udemyLink: "https://udemy.com/course/example-6",
-        fullDescription: "Create beautiful, native mobile applications for both iOS and Android using Google's Flutter framework and Dart programming language.",
-        prerequisites: "Basic programming experience recommended",
-        level: "Intermediate",
-        language: "English",
-        lastUpdated: "2024",
-        certificate: true,
-        whatYoullLearn: [
-          "Master Flutter framework and Dart language",
-          "Build responsive mobile interfaces",
-          "Integrate APIs and databases",
-          "Publish apps to app stores",
-          "Implement advanced mobile features"
         ]
       }
     ];
@@ -261,7 +121,7 @@ const App = () => {
       filtered = courses.filter(course =>
         course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         course.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        course.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (course.tags && course.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()))) ||
         course.instructor.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
@@ -345,7 +205,7 @@ const App = () => {
     <div className="group bg-white rounded-2xl shadow-md hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 overflow-hidden border border-gray-100">
       <div className="relative overflow-hidden">
         <img 
-          src={course.image} 
+          src={course.image || course.thumbnail || "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=400&h=200&fit=crop"} 
           alt={course.title}
           className="w-full h-48 sm:h-52 object-cover group-hover:scale-110 transition-transform duration-500"
           loading="lazy"
@@ -355,7 +215,7 @@ const App = () => {
           <span className="bg-gradient-to-r from-green-500 to-green-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">
             FREE
           </span>
-          {course.certificate && (
+          {(course.certificate || course.hasCertificate) && (
             <span className="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-2 py-1 rounded-full text-xs font-semibold shadow-lg">
               <Award size={12} className="inline mr-1" />
               Certificate
@@ -363,8 +223,8 @@ const App = () => {
           )}
         </div>
         <div className="absolute top-3 left-3">
-          <span className={`px-2 py-1 rounded-full text-xs font-semibold ${getLevelColor(course.level)}`}>
-            {course.level}
+          <span className={`px-2 py-1 rounded-full text-xs font-semibold ${getLevelColor(course.level || 'Beginner')}`}>
+            {course.level || 'Beginner'}
           </span>
         </div>
       </div>
@@ -372,11 +232,11 @@ const App = () => {
       <div className="p-6">
         <div className="flex items-center justify-between mb-3">
           <span className="inline-block bg-gradient-to-r from-purple-100 to-pink-100 text-purple-800 text-xs px-3 py-1 rounded-full font-medium">
-            {course.category}
+            {course.category || course.categoryName || 'General'}
           </span>
           <div className="flex items-center gap-1 text-yellow-500">
             <Star size={14} className="fill-current" />
-            <span className="text-sm font-semibold text-gray-700">{course.rating}</span>
+            <span className="text-sm font-semibold text-gray-700">{course.rating || 4.5}</span>
           </div>
         </div>
         
@@ -385,26 +245,26 @@ const App = () => {
         </h3>
         
         <p className="text-gray-600 text-sm mb-4 line-clamp-3 leading-relaxed">
-          {course.description}
+          {course.description || course.shortDescription || 'No description available'}
         </p>
         
         <div className="flex items-center justify-between text-xs text-gray-500 mb-4">
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-1">
               <Clock size={12} className="text-blue-500" />
-              <span className="font-medium">{course.duration}</span>
+              <span className="font-medium">{course.duration || '30 hours'}</span>
             </div>
             <div className="flex items-center gap-1">
               <Users size={12} className="text-green-500" />
-              <span className="font-medium">{course.students.toLocaleString()}</span>
+              <span className="font-medium">{course.students ? course.students.toLocaleString() : '1,000+'}</span>
             </div>
           </div>
         </div>
 
         <div className="mb-4">
-          <p className="text-xs text-gray-500 mb-2">By {course.instructor}</p>
+          <p className="text-xs text-gray-500 mb-2">By {course.instructor || course.instructorName || 'Expert Instructor'}</p>
           <div className="flex flex-wrap gap-1">
-            {course.tags.slice(0, 3).map((tag, index) => (
+            {(course.tags || []).slice(0, 3).map((tag, index) => (
               <span 
                 key={index}
                 className="bg-gray-50 text-gray-600 text-xs px-2 py-1 rounded-md border"
@@ -412,14 +272,14 @@ const App = () => {
                 {tag}
               </span>
             ))}
-            {course.tags.length > 3 && (
-              <span className="text-xs text-gray-400">+{course.tags.length - 3} more</span>
+            {(course.tags || []).length > 3 && (
+              <span className="text-xs text-gray-400">+{(course.tags || []).length - 3} more</span>
             )}
           </div>
         </div>
         
         <button
-          onClick={() => navigate(`/course/${course.slug}`)}
+          onClick={() => navigate(`/course/${course.slug || course.id}`)}
           className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl"
         >
           <Play size={16} className="inline mr-2" />

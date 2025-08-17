@@ -4,6 +4,10 @@ import { ArrowLeft, ExternalLink, Clock, Users, Star, BookOpen, Award, TrendingU
 import Header from '../Components/Header';
 import Footer from '../Components/Footer';
 
+// API endpoints
+const API_BASE_URL = 'http://localhost:3000/api';
+const COURSES_API = `${API_BASE_URL}/courses`;
+
 const CourseDetail = () => {
   const { slug } = useParams();
   const navigate = useNavigate();
@@ -18,190 +22,32 @@ const CourseDetail = () => {
   const fetchCourseDetail = async () => {
     try {
       setLoading(true);
-      // API call for course details (commented for now)
-      /*
-      const response = await fetch(`/api/courses/${slug}`);
-      if (!response.ok) throw new Error('Course not found');
-      const courseData = await response.json();
-      setCourse(courseData);
-      */
       
-      // Simulate API call with sample data
-      const coursesData = [
-        {
-          id: 1,
-          title: "Complete Web Development Bootcamp",
-          slug: "complete-web-development-bootcamp",
-          description: "Learn HTML, CSS, JavaScript, React, Node.js and become a full-stack developer",
-          image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&h=400&fit=crop",
-          category: "Development",
-          tags: ["JavaScript", "React", "Node.js", "HTML", "CSS"],
-          instructor: "John Smith",
-          duration: "40 hours",
-          students: 15420,
-          rating: 4.8,
-          udemyLink: "https://udemy.com/course/example-1",
-          fullDescription: "Master web development with this comprehensive bootcamp. You'll learn everything from basic HTML and CSS to advanced React and Node.js concepts. Perfect for beginners who want to become professional developers.",
-          prerequisites: "Basic computer skills",
-          level: "Beginner",
-          language: "English",
-          lastUpdated: "2024",
-          certificate: true,
-          whatYoullLearn: [
-            "Build responsive websites with HTML and CSS",
-            "Create interactive web applications with JavaScript",
-            "Develop modern frontends with React",
-            "Build backend APIs with Node.js",
-            "Deploy applications to production"
-          ]
-        },
-        {
-          id: 2,
-          title: "Digital Marketing Masterclass",
-          slug: "digital-marketing-masterclass",
-          description: "Complete guide to SEO, social media marketing, and online advertising strategies",
-          image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=400&fit=crop",
-          category: "Marketing",
-          tags: ["SEO", "Social Media", "Google Ads", "Content Marketing"],
-          instructor: "Sarah Johnson",
-          duration: "25 hours",
-          students: 8930,
-          rating: 4.7,
-          udemyLink: "https://udemy.com/course/example-2",
-          fullDescription: "Transform your business with proven digital marketing strategies. Learn SEO, social media marketing, Google Ads, and content marketing from industry experts.",
-          prerequisites: "No prior experience needed",
-          level: "Intermediate",
-          language: "English",
-          lastUpdated: "2024",
-          certificate: true,
-          whatYoullLearn: [
-            "Master SEO techniques for better rankings",
-            "Create effective social media campaigns",
-            "Set up and optimize Google Ads",
-            "Develop content marketing strategies",
-            "Track and analyze marketing performance"
-          ]
-        },
-        {
-          id: 3,
-          title: "UI/UX Design Fundamentals",
-          slug: "ui-ux-design-fundamentals",
-          description: "Learn user interface and user experience design principles and tools",
-          image: "https://images.unsplash.com/photo-1586717791821-3f44a563fa4c?w=800&h=400&fit=crop",
-          category: "Design",
-          tags: ["UI Design", "UX Research", "Figma", "Prototyping"],
-          instructor: "Mike Chen",
-          duration: "30 hours",
-          students: 12340,
-          rating: 4.9,
-          udemyLink: "https://udemy.com/course/example-3",
-          fullDescription: "Create stunning user interfaces and exceptional user experiences. Master design thinking, wireframing, prototyping, and user testing methodologies.",
-          prerequisites: "Creative mindset, no technical skills required",
-          level: "Beginner",
-          language: "English",
-          lastUpdated: "2024",
-          certificate: true,
-          whatYoullLearn: [
-            "Understand UX design principles",
-            "Create wireframes and prototypes",
-            "Master Figma for design work",
-            "Conduct user research and testing",
-            "Build a professional design portfolio"
-          ]
-        },
-        {
-          id: 4,
-          title: "Python for Data Science",
-          slug: "python-for-data-science",
-          description: "Complete Python programming course focused on data analysis and machine learning",
-          image: "https://images.unsplash.com/photo-1526379095098-d400fd0bf935?w=800&h=400&fit=crop",
-          category: "Development",
-          tags: ["Python", "Data Science", "Machine Learning", "Pandas"],
-          instructor: "Dr. Emma Wilson",
-          duration: "45 hours",
-          students: 20180,
-          rating: 4.8,
-          udemyLink: "https://udemy.com/course/example-4",
-          fullDescription: "Dive into Python programming for data science and machine learning. Learn pandas, numpy, matplotlib, and scikit-learn through hands-on projects.",
-          prerequisites: "Basic programming knowledge helpful but not required",
-          level: "Intermediate",
-          language: "English",
-          lastUpdated: "2024",
-          certificate: true,
-          whatYoullLearn: [
-            "Master Python programming fundamentals",
-            "Analyze data with pandas and numpy",
-            "Create visualizations with matplotlib",
-            "Build machine learning models",
-            "Work on real-world data science projects"
-          ]
-        },
-        {
-          id: 5,
-          title: "Business Strategy and Leadership",
-          slug: "business-strategy-and-leadership",
-          description: "Develop leadership skills and learn strategic business planning techniques",
-          image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&h=400&fit=crop",
-          category: "Business",
-          tags: ["Leadership", "Strategy", "Management", "Business Planning"],
-          instructor: "Robert Brown",
-          duration: "20 hours",
-          students: 6750,
-          rating: 4.6,
-          udemyLink: "https://udemy.com/course/example-5",
-          fullDescription: "Transform your leadership abilities and master strategic business thinking. Perfect for managers, entrepreneurs, and aspiring leaders.",
-          prerequisites: "Some work experience preferred",
-          level: "Advanced",
-          language: "English",
-          lastUpdated: "2024",
-          certificate: true,
-          whatYoullLearn: [
-            "Develop effective leadership skills",
-            "Create comprehensive business strategies",
-            "Master team management techniques",
-            "Learn decision-making frameworks",
-            "Build organizational culture"
-          ]
-        },
-        {
-          id: 6,
-          title: "Mobile App Development with Flutter",
-          slug: "mobile-app-development-with-flutter",
-          description: "Build cross-platform mobile apps for iOS and Android using Flutter and Dart",
-          image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=800&h=400&fit=crop",
-          category: "Development",
-          tags: ["Flutter", "Dart", "Mobile Development", "iOS", "Android"],
-          instructor: "Lisa Park",
-          duration: "35 hours",
-          students: 11230,
-          rating: 4.7,
-          udemyLink: "https://udemy.com/course/example-6",
-          fullDescription: "Create beautiful, native mobile applications for both iOS and Android using Google's Flutter framework and Dart programming language.",
-          prerequisites: "Basic programming experience recommended",
-          level: "Intermediate",
-          language: "English",
-          lastUpdated: "2024",
-          certificate: true,
-          whatYoullLearn: [
-            "Master Flutter framework and Dart language",
-            "Build responsive mobile interfaces",
-            "Integrate APIs and databases",
-            "Publish apps to app stores",
-            "Implement advanced mobile features"
-          ]
-        }
-      ];
-
-      setTimeout(() => {
-        const foundCourse = coursesData.find(c => c.slug === slug);
-        if (foundCourse) {
-          setCourse(foundCourse);
+      // Try to fetch by slug first, then by ID if slug is numeric
+      let url = `${COURSES_API}/${slug}`;
+      
+      console.log('Fetching course from:', url); // For debugging
+      
+      const response = await fetch(url);
+      if (!response.ok) {
+        // If slug doesn't work and it's numeric, try as ID
+        if (!isNaN(slug)) {
+          url = `${COURSES_API}/${slug}`;
+          const idResponse = await fetch(url);
+          if (!idResponse.ok) throw new Error('Course not found');
+          const courseData = await idResponse.json();
+          setCourse(courseData);
         } else {
-          setError('Course not found');
+          throw new Error('Course not found');
         }
-        setLoading(false);
-      }, 500);
+      } else {
+        const courseData = await response.json();
+        setCourse(courseData);
+      }
+      
+      setLoading(false);
     } catch (err) {
+      console.error('Error fetching course:', err);
       setError(err.message);
       setLoading(false);
     }
@@ -262,7 +108,12 @@ const CourseDetail = () => {
           <div className="flex items-center gap-2 text-sm">
             <Link to="/" className="text-blue-600 hover:text-blue-800">Home</Link>
             <span className="text-gray-400">/</span>
-            <Link to={`/?category=${course.category}`} className="text-blue-600 hover:text-blue-800">{course.category}</Link>
+            <Link 
+              to={`/?category=${course.categorySlug || course.category?.toLowerCase()}`} 
+              className="text-blue-600 hover:text-blue-800"
+            >
+              {course.category || course.categoryName || 'Courses'}
+            </Link>
             <span className="text-gray-400">/</span>
             <span className="text-gray-600 truncate">{course.title}</span>
           </div>
@@ -276,18 +127,18 @@ const CourseDetail = () => {
             <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
               <div className="relative">
                 <img 
-                  src={course.image} 
+                  src={course.image || course.thumbnail || "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&h=400&fit=crop"} 
                   alt={course.title}
                   className="w-full h-64 sm:h-80 object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
                 <div className="absolute bottom-6 left-6 right-6">
                   <div className="flex items-center gap-2 mb-2">
-                    <span className={`px-3 py-1 rounded-full text-sm font-semibold ${getLevelColor(course.level)}`}>
-                      {course.level}
+                    <span className={`px-3 py-1 rounded-full text-sm font-semibold ${getLevelColor(course.level || 'Beginner')}`}>
+                      {course.level || 'Beginner'}
                     </span>
                     <span className="bg-white/20 backdrop-blur-sm text-white px-3 py-1 rounded-full text-sm font-semibold">
-                      {course.category}
+                      {course.category || course.categoryName || 'General'}
                     </span>
                   </div>
                 </div>
@@ -299,7 +150,7 @@ const CourseDetail = () => {
                 </h1>
                 
                 <p className="text-gray-600 text-lg mb-6 leading-relaxed">
-                  {course.fullDescription}
+                  {course.fullDescription || course.description || course.shortDescription || 'No description available'}
                 </p>
 
                 {/* Trust Indicators */}
@@ -308,54 +159,66 @@ const CourseDetail = () => {
                     <div className="flex items-center justify-center w-12 h-12 bg-blue-100 rounded-full mx-auto mb-2">
                       <Users className="text-blue-600" size={20} />
                     </div>
-                    <div className="text-2xl font-bold text-gray-900">{course.students.toLocaleString()}</div>
+                    <div className="text-2xl font-bold text-gray-900">
+                      {course.students ? course.students.toLocaleString() : '1,000+'}
+                    </div>
                     <div className="text-sm text-gray-600">Students</div>
                   </div>
                   <div className="text-center">
                     <div className="flex items-center justify-center w-12 h-12 bg-yellow-100 rounded-full mx-auto mb-2">
                       <Star className="text-yellow-600 fill-current" size={20} />
                     </div>
-                    <div className="text-2xl font-bold text-gray-900">{course.rating}</div>
+                    <div className="text-2xl font-bold text-gray-900">{course.rating || 4.5}</div>
                     <div className="text-sm text-gray-600">Rating</div>
                   </div>
                   <div className="text-center">
                     <div className="flex items-center justify-center w-12 h-12 bg-green-100 rounded-full mx-auto mb-2">
                       <Clock className="text-green-600" size={20} />
                     </div>
-                    <div className="text-2xl font-bold text-gray-900">{course.duration}</div>
+                    <div className="text-2xl font-bold text-gray-900">{course.duration || '30 hours'}</div>
                     <div className="text-sm text-gray-600">Duration</div>
                   </div>
                   <div className="text-center">
                     <div className="flex items-center justify-center w-12 h-12 bg-purple-100 rounded-full mx-auto mb-2">
                       <Award className="text-purple-600" size={20} />
                     </div>
-                    <div className="text-2xl font-bold text-gray-900">Yes</div>
+                    <div className="text-2xl font-bold text-gray-900">
+                      {course.certificate || course.hasCertificate ? 'Yes' : 'No'}
+                    </div>
                     <div className="text-sm text-gray-600">Certificate</div>
                   </div>
                 </div>
                 
-                <div className="mb-8">
-                  <h3 className="text-2xl font-semibold mb-6 flex items-center gap-2">
-                    <BookOpen className="text-blue-600" size={24} />
-                    What you'll learn
-                  </h3>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    {course.whatYoullLearn.map((item, index) => (
-                      <div key={index} className="flex items-start gap-3 p-3 bg-green-50 rounded-lg">
-                        <CheckCircle className="text-green-600 mt-0.5 flex-shrink-0" size={16} />
-                        <span className="text-gray-700">{item}</span>
-                      </div>
-                    ))}
+                {/* What you'll learn section */}
+                {(course.whatYoullLearn || course.learningOutcomes || course.objectives) && (
+                  <div className="mb-8">
+                    <h3 className="text-2xl font-semibold mb-6 flex items-center gap-2">
+                      <BookOpen className="text-blue-600" size={24} />
+                      What you'll learn
+                    </h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      {(course.whatYoullLearn || course.learningOutcomes || course.objectives || []).map((item, index) => (
+                        <div key={index} className="flex items-start gap-3 p-3 bg-green-50 rounded-lg">
+                          <CheckCircle className="text-green-600 mt-0.5 flex-shrink-0" size={16} />
+                          <span className="text-gray-700">{item}</span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                </div>
+                )}
                 
-                <div className="border-t pt-6">
-                  <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
-                    <Shield className="text-blue-600" size={20} />
-                    Prerequisites
-                  </h3>
-                  <p className="text-gray-600 bg-blue-50 p-4 rounded-lg">{course.prerequisites}</p>
-                </div>
+                {/* Prerequisites section */}
+                {(course.prerequisites || course.requirements) && (
+                  <div className="border-t pt-6">
+                    <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
+                      <Shield className="text-blue-600" size={20} />
+                      Prerequisites
+                    </h3>
+                    <p className="text-gray-600 bg-blue-50 p-4 rounded-lg">
+                      {course.prerequisites || course.requirements}
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -367,7 +230,9 @@ const CourseDetail = () => {
                 <div className="text-4xl font-bold bg-gradient-to-r from-green-600 to-green-700 bg-clip-text text-transparent mb-2">
                   FREE
                 </div>
-                <div className="text-gray-500 text-sm line-through">Usually $49.99</div>
+                <div className="text-gray-500 text-sm line-through">
+                  Usually ${course.originalPrice || course.price || '49.99'}
+                </div>
                 <div className="text-green-600 text-sm font-semibold">100% Off Limited Time</div>
               </div>
               
@@ -377,36 +242,40 @@ const CourseDetail = () => {
                     <Users size={16} />
                     Instructor:
                   </span>
-                  <span className="font-medium text-blue-600">{course.instructor}</span>
+                  <span className="font-medium text-blue-600">
+                    {course.instructor || course.instructorName || 'Expert Instructor'}
+                  </span>
                 </div>
                 <div className="flex items-center justify-between py-2 border-b border-gray-100">
                   <span className="text-gray-600 flex items-center gap-2">
                     <Clock size={16} />
                     Duration:
                   </span>
-                  <span className="font-medium">{course.duration}</span>
+                  <span className="font-medium">{course.duration || '30 hours'}</span>
                 </div>
                 <div className="flex items-center justify-between py-2 border-b border-gray-100">
                   <span className="text-gray-600 flex items-center gap-2">
                     <TrendingUp size={16} />
                     Level:
                   </span>
-                  <span className={`font-medium px-2 py-1 rounded text-sm ${getLevelColor(course.level)}`}>
-                    {course.level}
+                  <span className={`font-medium px-2 py-1 rounded text-sm ${getLevelColor(course.level || 'Beginner')}`}>
+                    {course.level || 'Beginner'}
                   </span>
                 </div>
                 <div className="flex items-center justify-between py-2 border-b border-gray-100">
                   <span className="text-gray-600">Language:</span>
-                  <span className="font-medium">{course.language}</span>
+                  <span className="font-medium">{course.language || 'English'}</span>
                 </div>
                 <div className="flex items-center justify-between py-2">
                   <span className="text-gray-600">Updated:</span>
-                  <span className="font-medium">{course.lastUpdated}</span>
+                  <span className="font-medium">
+                    {course.lastUpdated || course.updatedAt || new Date().getFullYear()}
+                  </span>
                 </div>
               </div>
               
               <a
-                href={course.udemyLink}
+                href={course.udemyLink || course.courseUrl || course.url || '#'}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transform hover:scale-105 mb-4"
@@ -436,22 +305,25 @@ const CourseDetail = () => {
                 </ul>
               </div>
               
-              <div className="mt-6">
-                <h4 className="font-semibold mb-3 flex items-center gap-2">
-                  <BookOpen size={16} />
-                  Course Tags
-                </h4>
-                <div className="flex flex-wrap gap-2">
-                  {course.tags.map((tag, index) => (
-                    <span 
-                      key={index}
-                      className="bg-gradient-to-r from-gray-100 to-gray-200 text-gray-700 text-xs px-3 py-1 rounded-full font-medium hover:from-blue-100 hover:to-blue-200 hover:text-blue-700 transition-colors duration-200 cursor-pointer"
-                    >
-                      {tag}
-                    </span>
-                  ))}
+              {/* Course Tags */}
+              {(course.tags && course.tags.length > 0) && (
+                <div className="mt-6">
+                  <h4 className="font-semibold mb-3 flex items-center gap-2">
+                    <BookOpen size={16} />
+                    Course Tags
+                  </h4>
+                  <div className="flex flex-wrap gap-2">
+                    {course.tags.map((tag, index) => (
+                      <span 
+                        key={index}
+                        className="bg-gradient-to-r from-gray-100 to-gray-200 text-gray-700 text-xs px-3 py-1 rounded-full font-medium hover:from-blue-100 hover:to-blue-200 hover:text-blue-700 transition-colors duration-200 cursor-pointer"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
         </div>

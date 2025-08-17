@@ -2,21 +2,59 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Search, Menu, X, ChevronDown, User, BookOpen, Briefcase, Palette, Code, Heart, Monitor, Camera, TrendingUp, MessageCircle, Users, ExternalLink, Sparkles, Zap, Star } from "lucide-react";
 
-// API endpoints - replace with your actual API URLs
-const API_BASE_URL = 'https://your-api-domain.com/api'; // Replace with your actual API base URL
-const CATEGORIES_API = `${API_BASE_URL}/categories`;
+// API endpoints
+const API_BASE_URL = 'http://localhost:3000/api';
+const CATEGORIES_API = `${API_BASE_URL}/course-categories`;
 
-// Static categories data as fallback
+// Static categories data as fallback with icons
 const staticCategories = [
   { id: 1, name: "Business", slug: "business", icon: <Briefcase className="w-5 h-5" />, color: "from-blue-500 to-blue-600", count: "2,345 courses" },
   { id: 2, name: "Design", slug: "design", icon: <Palette className="w-5 h-5" />, color: "from-pink-500 to-rose-600", count: "1,789 courses" },
-  { id: 3, name: "Development", slug: "development", icon: <Code className="w-5 h-5" />, color: "from-green-500 to-emerald-600", count: "3,567 courses" },
+  { id: 3, name: "Development", slug: "webdevelopment", icon: <Code className="w-5 h-5" />, color: "from-green-500 to-emerald-600", count: "3,567 courses" },
   { id: 4, name: "Health & Fitness", slug: "health-fitness", icon: <Heart className="w-5 h-5" />, color: "from-red-500 to-pink-600", count: "987 courses" },
   { id: 5, name: "Music", slug: "music", icon: <BookOpen className="w-5 h-5" />, color: "from-purple-500 to-violet-600", count: "1,234 courses" },
   { id: 6, name: "Marketing", slug: "marketing", icon: <TrendingUp className="w-5 h-5" />, color: "from-yellow-500 to-orange-600", count: "654 courses" },
   { id: 7, name: "Technology", slug: "technology", icon: <Monitor className="w-5 h-5" />, color: "from-indigo-500 to-purple-600", count: "2,123 courses" },
   { id: 8, name: "Photography", slug: "photography", icon: <Camera className="w-5 h-5" />, color: "from-orange-500 to-red-600", count: "876 courses" },
 ];
+
+// Icon mapping for categories
+const getIconForCategory = (categoryName, categorySlug) => {
+  const iconMap = {
+    'business': <Briefcase className="w-5 h-5" />,
+    'design': <Palette className="w-5 h-5" />,
+    'development': <Code className="w-5 h-5" />,
+    'webdevelopment': <Code className="w-5 h-5" />,
+    'health': <Heart className="w-5 h-5" />,
+    'fitness': <Heart className="w-5 h-5" />,
+    'music': <BookOpen className="w-5 h-5" />,
+    'marketing': <TrendingUp className="w-5 h-5" />,
+    'technology': <Monitor className="w-5 h-5" />,
+    'photography': <Camera className="w-5 h-5" />,
+  };
+
+  const key = categorySlug?.toLowerCase() || categoryName?.toLowerCase() || '';
+  return iconMap[key] || <BookOpen className="w-5 h-5" />;
+};
+
+// Color mapping for categories
+const getColorForCategory = (categoryName, categorySlug) => {
+  const colorMap = {
+    'business': 'from-blue-500 to-blue-600',
+    'design': 'from-pink-500 to-rose-600',
+    'development': 'from-green-500 to-emerald-600',
+    'webdevelopment': 'from-green-500 to-emerald-600',
+    'health': 'from-red-500 to-pink-600',
+    'fitness': 'from-red-500 to-pink-600',
+    'music': 'from-purple-500 to-violet-600',
+    'marketing': 'from-yellow-500 to-orange-600',
+    'technology': 'from-indigo-500 to-purple-600',
+    'photography': 'from-orange-500 to-red-600',
+  };
+
+  const key = categorySlug?.toLowerCase() || categoryName?.toLowerCase() || '';
+  return colorMap[key] || 'from-blue-500 to-blue-600';
+};
 
 // API call function
 const fetchCategories = async () => {
@@ -25,12 +63,12 @@ const fetchCategories = async () => {
     if (!response.ok) throw new Error('Failed to fetch categories');
     const data = await response.json();
     
-    // Map API data to include icons and colors (you might need to adjust this based on your API response)
-    return data.map((category, index) => ({
+    // Map API data to include icons and colors
+    return data.map((category) => ({
       ...category,
-      icon: staticCategories[index % staticCategories.length]?.icon || <BookOpen className="w-5 h-5" />,
-      color: staticCategories[index % staticCategories.length]?.color || "from-blue-500 to-blue-600",
-      count: category.count || `${Math.floor(Math.random() * 3000) + 500} courses`
+      icon: getIconForCategory(category.name, category.slug),
+      color: getColorForCategory(category.name, category.slug),
+      count: category.count || category.courseCount || `${Math.floor(Math.random() * 3000) + 500} courses`
     }));
   } catch (error) {
     console.error('Error fetching categories:', error);
